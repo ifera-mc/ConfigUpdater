@@ -14,7 +14,7 @@
 ### API
 
 ```php
-    JackMD\ConfigUpdater\ConfigUpdater::checkUpdate(Plugin $plugin, Config $config, string $configPath, string $configName, string $configExtension, string $configKey, int $latestVersion, string $updateMessage);
+    JackMD\ConfigUpdater\ConfigUpdater::checkUpdate(Plugin $plugin, Config $config, string $configPath, string $configName, string $configExtension, string $configKey, int $latestVersion, string $updateMessage = "");
 ```
 
 - **$plugin** is the plugin whom you are calling the function from.

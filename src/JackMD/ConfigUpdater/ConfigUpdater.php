@@ -33,6 +33,7 @@ declare(strict_types = 1);
 namespace JackMD\ConfigUpdater;
 
 use pocketmine\plugin\Plugin;
+use pocketmine\scheduler\ClosureTask;
 use pocketmine\utils\Config;
 
 class ConfigUpdater{
@@ -47,14 +48,23 @@ class ConfigUpdater{
 	 * @param int    $latestVersion   The latest version of the config. Needs to be integer.
 	 * @param string $updateMessage   The update message that would be shown on console if the plugin is outdated.
 	 */
-	public static function checkUpdate(Plugin $plugin, Config $config, string $configPath, string $configName, string $configExtension, string $configKey, int $latestVersion, string $updateMessage){
-		if(($config->exists($configKey)) || ((int) $config->get($configKey) === $latestVersion)){
+	public static function checkUpdate(Plugin $plugin, Config $config, string $configPath, string $configName, string $configExtension, string $configKey, int $latestVersion, string $updateMessage = ""){
+		if(($config->exists($configKey)) && ((int) $config->get($configKey) === $latestVersion)){
 			return;
+		}
+		if(trim($updateMessage) === ""){
+			$updateMessage = "Your config.yml file is outdated. Your old config.yml has been saved as config_old.yml and a new config.yml file has been generated. Please update accordingly.";
 		}
 
 		rename($plugin->getDataFolder() . $configPath . $configName . "." . $configExtension, $plugin->getDataFolder() . $configPath . $configName . "_old." . $configExtension);
 
 		$plugin->saveResource($configPath . $configName . "." . $configExtension);
-		$plugin->getLogger()->critical($updateMessage);
+
+		$task = new ClosureTask(function(int $currentTick) use ($plugin, $updateMessage): void{
+			$plugin->getLogger()->critical($updateMessage);
+		});
+
+		/* This task is here so that the update message can be sent after full server load */
+		$plugin->getScheduler()->scheduleDelayedTask($task, 3*20);
 	}
 }
