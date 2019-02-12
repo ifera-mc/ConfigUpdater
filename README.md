@@ -9,7 +9,7 @@
 ### Features
 
 - Super simple virion to be used in your plugins.
-- It checks if a new release for a plugin is available on Poggit. If so then it notifies the user about the new release.
+- It checks if a new version of config is available and if so it then updates and notifies the user.
 
 ### API
 
