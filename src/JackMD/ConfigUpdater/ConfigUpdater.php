@@ -53,7 +53,7 @@ class ConfigUpdater{
 			return;
 		}
 		if(trim($updateMessage) === ""){
-			$updateMessage = "Your " . $configName . "." . $configExtension . " file is outdated. Your old " . $configName . "." . $configExtension . " has been saved as " . $configName . "_old." . $configExtensionand . " and a new " . $configName . "." . $configExtension . " file has been generated. Please update accordingly.";
+			$updateMessage = "Your " . $configName . "." . $configExtension . " file is outdated. Your old " . $configName . "." . $configExtension . " has been saved as " . $configName . "_old." . $configExtension . " and a new " . $configName . "." . $configExtension . " file has been generated. Please update accordingly.";
 		}
 
 		rename($plugin->getDataFolder() . $configPath . $configName . "." . $configExtension, $plugin->getDataFolder() . $configPath . $configName . "_old." . $configExtension);
