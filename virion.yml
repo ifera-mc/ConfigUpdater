@@ -1,4 +1,4 @@
-name: UpdateNotifier
+name: ConfigUpdater
 version: 1.0.0
 api: [3.0.0]
 antigen: JackMD\ConfigUpdater
