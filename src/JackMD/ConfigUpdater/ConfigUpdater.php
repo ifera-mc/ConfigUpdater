@@ -39,32 +39,104 @@ use pocketmine\utils\Config;
 class ConfigUpdater{
 
 	/**
-	 * @param Plugin $plugin          The plugin you are calling this from.
-	 * @param Config $config          The config you want to update.
-	 * @param string $configPath      If the config is located in some other folder in the resources folder then use this to add the folder.
-	 * @param string $configName      The name of the config without its extension.
-	 * @param string $configExtension The extension of the config without the dot.
-	 * @param string $configKey       The version key that needs to be checked in the config.
-	 * @param int    $latestVersion   The latest version of the config. Needs to be integer.
-	 * @param string $updateMessage   The update message that would be shown on console if the plugin is outdated.
+	 * @param Plugin $plugin        The plugin you are calling this from.
+	 * @param Config $config        The config you want to update.
+	 * @param string $configKey     The version key that needs to be checked in the config.
+	 * @param int    $latestVersion The latest version of the config. Needs to be integer.
+	 * @param string $updateMessage The update message that would be shown on console if the plugin is outdated.
+	 * @throws \ReflectionException
 	 */
-	public static function checkUpdate(Plugin $plugin, Config $config, string $configPath, string $configName, string $configExtension, string $configKey, int $latestVersion, string $updateMessage = ""){
+	public static function checkUpdate(Plugin $plugin, Config $config, string $configKey, int $latestVersion, string $updateMessage = ""): void{
 		if(($config->exists($configKey)) && ((int) $config->get($configKey) === $latestVersion)){
 			return;
 		}
+
+		$configData = self::getConfigData($config);
+		$configPath = $configData["configPath"];
+		$pluginPath = $configData["pluginPath"];
+		$originalConfig = $configData["configName"];
+		$oldConfig = $configData["oldConfigName"];
+
 		if(trim($updateMessage) === ""){
-			$updateMessage = "Your " . $configName . "." . $configExtension . " file is outdated. Your old " . $configName . "." . $configExtension . " has been saved as " . $configName . "_old." . $configExtension . " and a new " . $configName . "." . $configExtension . " file has been generated. Please update accordingly.";
+			$updateMessage = "Your $originalConfig file is outdated. Your old $originalConfig has been saved as $oldConfig and a new $originalConfig file has been generated. Please update accordingly.";
 		}
 
-		rename($plugin->getDataFolder() . $configPath . $configName . "." . $configExtension, $plugin->getDataFolder() . $configPath . $configName . "_old." . $configExtension);
+		rename($configPath . $originalConfig, $configPath . $oldConfig);
 
-		$plugin->saveResource($configPath . $configName . "." . $configExtension);
+		self::saveFile($pluginPath, $configPath, $originalConfig);
 
 		$task = new ClosureTask(function(int $currentTick) use ($plugin, $updateMessage): void{
 			$plugin->getLogger()->critical($updateMessage);
 		});
 
 		/* This task is here so that the update message can be sent after full server load */
-		$plugin->getScheduler()->scheduleDelayedTask($task, 3*20);
+		$plugin->getScheduler()->scheduleDelayedTask($task, 3 * 20);
+	}
+
+	/**
+	 * Pretty self explanatory I guess...
+	 *
+	 * @param Config $config
+	 * @return array
+	 * @throws \ReflectionException
+	 */
+	private static function getConfigData(Config $config): array{
+		$configPath = self::getConfigPath($config);
+		$configData = explode(".", basename($configPath));
+
+		$configName = $configData[0];
+		$configExtension = $configData[1];
+
+		$originalConfigName = $configName . "." . $configExtension;
+		$oldConfigName = $configName . "_old." . $configExtension;
+
+		$configPath = str_replace($originalConfigName, "", $configPath);
+		$pluginPath = str_replace("plugin_data", "plugins", $configPath);
+
+		return [
+			"configPath"    => $configPath,
+			"pluginPath"    => $pluginPath,
+			"configName"    => $originalConfigName,
+			"oldConfigName" => $oldConfigName
+		];
+	}
+
+	/**
+	 * This function is here until PM adds the function to get file path.
+	 *
+	 * @param Config $config
+	 * @return string
+	 * @throws \ReflectionException
+	 */
+	private static function getConfigPath(Config $config): string{
+		$pathReflection = new \ReflectionProperty(Config::class, 'file');
+		$pathReflection->setAccessible(true);
+
+		return $pathReflection->getValue($config);
+	}
+
+	/**
+	 * Taken from pocketmine\plugin\PluginBase::saveResource().
+	 * Edited to be used for this virion.
+	 *
+	 * @param string $pluginPath
+	 * @param string $outPath
+	 * @param string $configName
+	 * @return bool
+	 */
+	private static function saveFile(string $pluginPath, string $outPath, string $configName): bool{
+		$out = $outPath . $configName;
+		$fileName = $pluginPath . "resources/" . $configName;
+		$resource = fopen($fileName, "rb");
+
+		if(!file_exists(dirname($out))){
+			mkdir(dirname($out), 0755, true);
+		}
+
+		$ret = stream_copy_to_stream($resource, $fp = fopen($out, "wb")) > 0;
+		fclose($fp);
+		fclose($resource);
+
+		return $ret;
 	}
 }
