@@ -14,14 +14,11 @@
 ### API
 
 ```php
-    JackMD\ConfigUpdater\ConfigUpdater::checkUpdate(Plugin $plugin, Config $config, string $configPath, string $configName, string $configExtension, string $configKey, int $latestVersion, string $updateMessage = "");
+    JackMD\ConfigUpdater\ConfigUpdater::checkUpdate(Plugin $plugin, Config $config, string $configKey, int $latestVersion, string $updateMessage = "");
 ```
 
 - **$plugin** is the plugin whom you are calling the function from.
 - **$config** is the config you want to update.
-- **$configPath** if the config is located in some other folder in the resources folder then use this to add the folder.
-- **$configName** is the name of the config without its extension.
-- **$configExtension** is the extension of the config without the dot.
 - **$configKey** is the version key that needs to be checked in the config.
 - **$latestVersion** is the latest version of the config. Needs to be integer.
 - **$updateMessage** is the update message that would be shown on console if the plugin is outdated.
