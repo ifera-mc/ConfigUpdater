@@ -44,11 +44,12 @@ class ConfigUpdater{
 	 * @param string $configKey     The version key that needs to be checked in the config.
 	 * @param int    $latestVersion The latest version of the config. Needs to be integer.
 	 * @param string $updateMessage The update message that would be shown on console if the plugin is outdated.
+	 * @return bool
 	 * @throws \ReflectionException
 	 */
-	public static function checkUpdate(Plugin $plugin, Config $config, string $configKey, int $latestVersion, string $updateMessage = ""): void{
+	public static function checkUpdate(Plugin $plugin, Config $config, string $configKey, int $latestVersion, string $updateMessage = ""): bool{
 		if(($config->exists($configKey)) && ((int) $config->get($configKey) === $latestVersion)){
-			return;
+			return false;
 		}
 
 		$configData = self::getConfigData($config);
@@ -71,6 +72,8 @@ class ConfigUpdater{
 
 		/* This task is here so that the update message can be sent after full server load */
 		$plugin->getScheduler()->scheduleDelayedTask($task, 3 * 20);
+
+		return true;
 	}
 
 	/**
