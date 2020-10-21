@@ -54,7 +54,6 @@ class ConfigUpdater{
 
 		$configData = self::getConfigData($config);
 		$configPath = $configData["configPath"];
-		$pluginPath = $configData["pluginPath"];
 		$originalConfig = $configData["configName"];
 		$oldConfig = $configData["oldConfigName"];
 
@@ -64,7 +63,7 @@ class ConfigUpdater{
 
 		rename($configPath . $originalConfig, $configPath . $oldConfig);
 
-		self::saveFile($pluginPath, $configPath, $originalConfig);
+		$plugin->saveResource($originalConfig);
 
 		$task = new ClosureTask(function(int $currentTick) use ($plugin, $updateMessage): void{
 			$plugin->getLogger()->critical($updateMessage);
@@ -116,30 +115,5 @@ class ConfigUpdater{
 		$pathReflection->setAccessible(true);
 
 		return $pathReflection->getValue($config);
-	}
-
-	/**
-	 * Taken from pocketmine\plugin\PluginBase::saveResource().
-	 * Edited to be used for this virion.
-	 *
-	 * @param string $pluginPath
-	 * @param string $outPath
-	 * @param string $configName
-	 * @return bool
-	 */
-	private static function saveFile(string $pluginPath, string $outPath, string $configName): bool{
-		$out = $outPath . $configName;
-		$fileName = $pluginPath . "resources/" . $configName;
-		$resource = fopen($fileName, "rb");
-
-		if(!file_exists(dirname($out))){
-			mkdir(dirname($out), 0755, true);
-		}
-
-		$ret = stream_copy_to_stream($resource, $fp = fopen($out, "wb")) > 0;
-		fclose($fp);
-		fclose($resource);
-
-		return $ret;
 	}
 }
