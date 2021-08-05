@@ -1,8 +1,8 @@
 # ConfigUpdater
 
-| HitCount | License |
-|:--:|:--:|
-|[![HitCount](http://hits.dwyl.io/JackMD/ConfigUpdater.svg)](http://hits.dwyl.io/JackMD/ConfigUpdater)|[![GitHub license](https://img.shields.io/github/license/JackMD/ConfigUpdater.svg)](https://github.com/JackMD/ConfigUpdater/blob/master/LICENSE)|
+| Discord | Poggit | License |
+|:--:|:--:|:--:|
+|[![Chat](https://img.shields.io/badge/chat-on%20discord-7289da.svg)](https://discord.gg/urQt6ETgYu)|[![Poggit-CI](https://poggit.pmmp.io/ci.shield/ifera-mc/ConfigUpdater/ConfigUpdater)](https://poggit.pmmp.io/ci/ifera-mc/ConfigUpdater/ConfigUpdater)|[![GitHub license](https://img.shields.io/github/license/ifera-mc/ConfigUpdater.svg)](https://github.com/ifera-mc/ConfigUpdater/blob/master/LICENSE)|
 
 ### A handy virion for PocketMine-MP plugin developers that checks if a new version of config is available. If so then it notifies the user about the new update and updates the config.
 
@@ -26,6 +26,23 @@
 <br />
 
 - For information regarding how to use a virion in a plugin please refer [here](https://poggit.github.io/support/virion.html)
+
+
+### Poggit Setup
+
+Edit the `.poggit.yml` in your repository and set it up like shown below.
+
+```yml
+--- 
+branches:
+- master
+projects:
+  PLUGIN_NAME:
+    libs:
+      - src: ifera-mc/ConfigUpdater/ConfigUpdater
+        version: ^1.2.0
+...
+```
 
 ### Disclaimer
 
