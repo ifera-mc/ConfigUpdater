@@ -65,7 +65,7 @@ class ConfigUpdater{
 
 		$plugin->saveResource($originalConfig);
 
-		$task = new ClosureTask(function(int $currentTick) use ($plugin, $updateMessage): void{
+		$task = new ClosureTask(function( ) use ($plugin, $updateMessage): void{
 			$plugin->getLogger()->critical($updateMessage);
 		});
 
