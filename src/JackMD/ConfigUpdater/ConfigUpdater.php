@@ -45,7 +45,6 @@ class ConfigUpdater{
 	 * @param int    $latestVersion The latest version of the config. Needs to be integer.
 	 * @param string $updateMessage The update message that would be shown on console if the plugin is outdated.
 	 * @return bool
-	 * @throws \ReflectionException
 	 */
 	public static function checkUpdate(Plugin $plugin, Config $config, string $configKey, int $latestVersion, string $updateMessage = ""): bool{
 		if(($config->exists($configKey)) && ((int) $config->get($configKey) === $latestVersion)){
@@ -65,7 +64,7 @@ class ConfigUpdater{
 
 		$plugin->saveResource($originalConfig);
 
-		$task = new ClosureTask(function( ) use ($plugin, $updateMessage): void{
+		$task = new ClosureTask(function() use ($plugin, $updateMessage): void{
 			$plugin->getLogger()->critical($updateMessage);
 		});
 
@@ -80,10 +79,9 @@ class ConfigUpdater{
 	 *
 	 * @param Config $config
 	 * @return array
-	 * @throws \ReflectionException
 	 */
 	private static function getConfigData(Config $config): array{
-		$configPath = self::getConfigPath($config);
+		$configPath = $config->getPath();
 		$configData = explode(".", basename($configPath));
 
 		$configName = $configData[0];
@@ -101,19 +99,5 @@ class ConfigUpdater{
 			"configName"    => $originalConfigName,
 			"oldConfigName" => $oldConfigName
 		];
-	}
-
-	/**
-	 * This function is here until PM adds the function to get file path.
-	 *
-	 * @param Config $config
-	 * @return string
-	 * @throws \ReflectionException
-	 */
-	private static function getConfigPath(Config $config): string{
-		$pathReflection = new \ReflectionProperty(Config::class, 'file');
-		$pathReflection->setAccessible(true);
-
-		return $pathReflection->getValue($config);
 	}
 }
