@@ -11,11 +11,11 @@ declare(strict_types = 1);
  *                           __/ |     | |
  *                          |___/      |_|
  *
- * ConfigUpdater, a updater virion for PocketMine-MP
- * Copyright (c) 2018 JackMD  < https://github.com/JackMD >
+ * ConfigUpdater, a config updater virion for PocketMine-MP
+ * Copyright (c) Ifera (aka JackMD) < https://github.com/Ifera >
  *
- * Discord: JackMD#3717
- * Twitter: JackMTaylor_
+ * Discord: ifera#3717
+ * Twitter: ifera_tr
  *
  * This software is distributed under "GNU General Public License v3.0".
  *
