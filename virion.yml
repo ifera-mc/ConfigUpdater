@@ -1,6 +1,6 @@
 name: ConfigUpdater
-version: 1.2.0
-api: [3.0.0]
+version: 1.2.1
+api: 4.0.0
 antigen: JackMD\ConfigUpdater
-author: JackMD
-php: [7.2, 7.3, 7.4, 8.0]
+author: Ifera
+php: 8.0
