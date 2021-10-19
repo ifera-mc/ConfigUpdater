@@ -75,7 +75,8 @@ class ConfigUpdater{
 	}
 
 	/**
-	 * Pretty self explanatory I guess...
+	 * Returns the path to current config, the path to the config in plugins folder, the
+	 * name of the config and the name of config suffixed with old.
 	 *
 	 * @param Config $config
 	 * @return array
