@@ -57,15 +57,15 @@ class ConfigUpdater{
 		$oldConfig = $configData["oldConfigName"];
 
 		if(trim($updateMessage) === ""){
-			$updateMessage = "Your $originalConfig file is outdated. Your old $originalConfig has been saved as $oldConfig and a new $originalConfig file has been generated. Please update accordingly.";
+			$updateMessage = "Your %s file is outdated. Your old %s has been saved as %s and a new %s file has been generated. Please update accordingly.";
 		}
 
 		rename($configPath . $originalConfig, $configPath . $oldConfig);
 
 		$plugin->saveResource($originalConfig);
 
-		$task = new ClosureTask(function() use ($plugin, $updateMessage): void{
-			$plugin->getLogger()->critical($updateMessage);
+		$task = new ClosureTask(function() use ($plugin, $updateMessage, $originalConfig, $oldConfig): void{
+			$plugin->getLogger()->critical(vsprintf($updateMessage, [$originalConfig, $originalConfig, $oldConfig, $originalConfig]));
 		});
 
 		/* This task is here so that the update message can be sent after full server load */
