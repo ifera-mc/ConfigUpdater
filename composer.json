@@ -1,0 +1,24 @@
+{
+    "name": "ifera-mc/config-updater",
+    "description": "A handy virion for PocketMine-MP plugin developers that checks if a new version of config is available. If so then it notifies the user about the new update and updates the config.",
+    "type": "library",
+    "license": "GPL-3.0",
+    "require": {
+        "pocketmine/pocketmine-mp": "^4.0.0"
+    },
+    "autoload": {
+        "classmap": ["src"]
+    },
+    "authors": [
+        {
+            "name": "Ifera",
+            "email": "contact@tayyab.dev"
+        }
+    ],
+    "extra": {
+        "virion": {
+            "spec": "3.0",
+            "namespace-root": "JackMD\\ConfigUpdater"
+        }
+    }
+}
